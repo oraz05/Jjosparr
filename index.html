@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Менің Жоспарым</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@300;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0f;--card:#111118;--accent1:#7c3aed;--accent2:#06b6d4;--accent3:#f59e0b;--green:#22c55e;--red:#ef4444;--text:#e2e8f0;--muted:#64748b;--border:#1e1e2e;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 20% 20%,rgba(124,58,237,.08) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(6,182,212,.05) 0%,transparent 60%);pointer-events:none;z-index:0;}
+  .container{position:relative;z-index:1;max-width:430px;margin:0 auto;padding:24px 16px 70px;}
+
+  .header{text-align:center;margin-bottom:20px;animation:fadeDown .7s ease both;}
+  .header-label{font-size:10px;letter-spacing:4px;color:var(--accent2);text-transform:uppercase;margin-bottom:6px;}
+  .header h1{font-family:'Unbounded',sans-serif;font-weight:900;font-size:26px;line-height:1.1;background:linear-gradient(135deg,#fff 30%,var(--accent1) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .header-date{font-size:11px;color:var(--muted);margin-top:6px;}
+
+  .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:20px;animation:fadeUp .7s .05s ease both;}
+  .stat-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;}
+  .stat-num{font-family:'Unbounded',sans-serif;font-size:18px;font-weight:900;color:var(--accent2);display:block;}
+  .stat-label{font-size:8px;color:var(--muted);margin-top:2px;line-height:1.3;}
+
+  .section-title{font-family:'Unbounded',sans-serif;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+  /* ── MOTIVATION CAROUSEL ── */
+  .moto-section{margin-bottom:22px;animation:fadeUp .7s .08s ease both;}
+  .moto-carousel{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--border);}
+  .moto-slides{display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1);}
+  .moto-slide{min-width:100%;cursor:pointer;user-select:none;background:var(--card);}
+
+  /* Slide type A — real image */
+  .slide-img-wrap{width:100%;position:relative;overflow:hidden;}
+  .slide-img-wrap img{width:100%;display:block;object-fit:cover;}
+  .slide-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,1) 0%,rgba(10,10,15,.3) 60%,transparent 100%);}
+
+  /* Slide type B — SVG poster */
+  .slide-svg-wrap{width:100%;background:#0d0d14;}
+  .slide-svg-wrap svg{width:100%;display:block;}
+
+  .moto-body{padding:16px 18px 18px;}
+  .moto-emoji{font-size:22px;margin-bottom:6px;display:block;}
+  .moto-text{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:#fff;line-height:1.55;margin-bottom:6px;min-height:36px;}
+  .moto-author{font-size:10px;color:var(--muted);}
+  .moto-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 14px;}
+  .moto-arr{background:rgba(255,255,255,.07);border:none;color:var(--text);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+  .moto-arr:hover{background:var(--accent1);}
+  .moto-dots{display:flex;gap:5px;align-items:center;}
+  .qdot{width:5px;height:5px;border-radius:50%;background:var(--border);transition:all .3s;cursor:pointer;}
+  .qdot.active{background:var(--accent1);width:16px;border-radius:3px;}
+  .moto-counter{font-size:10px;color:var(--muted);}
+
+  /* ── CALENDAR ── */
+  .calendar-section{margin-bottom:22px;animation:fadeUp .7s .12s ease both;}
+  .cal-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;}
+  .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .cal-month{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:#fff;}
+  .cal-today-btn{font-size:9px;background:rgba(6,182,212,.12);color:var(--accent2);border:none;border-radius:100px;padding:5px 12px;cursor:pointer;font-family:'Space Mono',monospace;transition:background .2s;}
+  .cal-today-btn:hover{background:rgba(6,182,212,.25);}
+  .cal-arr{background:var(--border);border:none;color:var(--text);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+  .cal-arr:hover{background:var(--accent1);}
+  .cal-legend{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+  .leg-item{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--muted);}
+  .leg-dot{width:10px;height:10px;border-radius:3px;}
+  .leg-work{background:rgba(239,68,68,.5);}
+  .leg-free{background:rgba(34,197,94,.5);}
+  .leg-done{background:var(--accent1);}
+  .leg-today{border:1.5px solid var(--accent2);background:transparent;}
+  .cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px;}
+  .cal-dow-label{font-size:9px;color:var(--muted);text-align:center;padding:2px 0;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+  .cal-day{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;cursor:pointer;transition:all .2s;position:relative;border:1.5px solid transparent;background:var(--border);}
+  .cal-day:hover{transform:scale(1.1);}
+  .cal-day.empty{background:transparent;cursor:default;pointer-events:none;}
+  .cal-day.today{border-color:var(--accent2)!important;box-shadow:0 0 8px rgba(6,182,212,.3);}
+  .cal-day.work{background:rgba(239,68,68,.2);color:#fca5a5;}
+  .cal-day.free{background:rgba(34,197,94,.15);color:#86efac;}
+  .cal-day.done{background:var(--accent1)!important;color:white!important;}
+  .cal-day.done::after{content:'✓';position:absolute;bottom:1px;font-size:7px;opacity:.8;}
+  .day-num{font-size:11px;font-weight:700;line-height:1;}
+  .cal-info{font-size:10px;color:var(--muted);margin-top:10px;text-align:center;line-height:1.5;}
+  .cal-info span{color:var(--accent2);}
+
+  /* ── CHECKLIST ── */
+  .checklist-section{margin-bottom:22px;animation:fadeUp .7s .16s ease both;}
+  .checklist-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .day-badge{font-size:10px;padding:3px 10px;border-radius:100px;font-family:'Unbounded',sans-serif;font-weight:700;}
+  .badge-work{background:rgba(239,68,68,.15);color:#fca5a5;}
+  .badge-free{background:rgba(34,197,94,.15);color:#86efac;}
+  .badge-none{background:var(--border);color:var(--muted);}
+  .checklist-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+  .check-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;user-select:none;}
+  .check-item:last-child{border-bottom:none;}
+  .check-item:hover{background:rgba(255,255,255,.02);}
+  .check-item.done{opacity:.4;}
+  .check-item.done .check-text{text-decoration:line-through;text-decoration-color:var(--accent1);}
+  .check-item.hidden{display:none;}
+  .check-box{width:18px;height:18px;border:1.5px solid var(--muted);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;transition:all .2s;color:transparent;}
+  .check-item.done .check-box{background:var(--accent1);border-color:var(--accent1);color:white;}
+  .check-text{font-size:11px;flex:1;line-height:1.4;}
+  .check-cat{font-size:9px;padding:2px 7px;border-radius:100px;flex-shrink:0;}
+  .cat-en{background:rgba(6,182,212,.12);color:var(--accent2);}
+  .cat-fig{background:rgba(124,58,237,.12);color:var(--accent1);}
+  .cat-any{background:rgba(245,158,11,.12);color:var(--accent3);}
+  .no-tasks{padding:20px 16px;text-align:center;font-size:11px;color:var(--muted);}
+
+  /* ── IDEAS ── */
+  .ideas-section{margin-bottom:22px;animation:fadeUp .7s .2s ease both;}
+  .ideas-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .idea-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;transition:transform .2s,border-color .2s;position:relative;overflow:hidden;}
+  .idea-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .2s;}
+  .idea-card:hover{transform:translateY(-3px);border-color:rgba(124,58,237,.3);}
+  .idea-card:hover::before{opacity:1;}
+  .idea-card.c1::before{background:linear-gradient(90deg,var(--accent2),transparent);}
+  .idea-card.c2::before{background:linear-gradient(90deg,var(--accent1),transparent);}
+  .idea-card.c3::before{background:linear-gradient(90deg,var(--accent3),transparent);}
+  .idea-card.c4::before{background:linear-gradient(90deg,var(--green),transparent);}
+  .idea-icon{font-size:22px;margin-bottom:8px;display:block;}
+  .idea-title{font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;color:#fff;margin-bottom:4px;}
+  .idea-desc{font-size:10px;color:var(--muted);line-height:1.5;}
+
+  /* ── PROGRESS ── */
+  .progress-section{margin-bottom:22px;animation:fadeUp .7s .24s ease both;}
+  .progress-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;}
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:13px;}
+  .progress-row:last-child{margin-bottom:0;}
+  .progress-label{font-size:11px;color:var(--text);width:80px;flex-shrink:0;}
+  .progress-bar{flex:1;height:6px;background:var(--border);border-radius:100px;overflow:hidden;}
+  .progress-fill{height:100%;border-radius:100px;width:0%;transition:width 1.5s cubic-bezier(.34,1.56,.64,1);}
+  .fill-en{background:linear-gradient(90deg,var(--accent2),#38bdf8);}
+  .fill-fig{background:linear-gradient(90deg,var(--accent1),#a855f7);}
+  .fill-ielts{background:linear-gradient(90deg,var(--accent3),#fbbf24);}
+  .progress-pct{font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;width:32px;text-align:right;color:var(--muted);}
+
+  /* ── ROADMAP ── */
+  .roadmap-section{margin-bottom:22px;animation:fadeUp .7s .28s ease both;}
+  .roadmap{display:flex;flex-direction:column;gap:0;}
+  .rm-item{display:flex;gap:14px;position:relative;}
+  .rm-item:not(:last-child)::before{content:'';position:absolute;left:15px;top:32px;bottom:0;width:2px;background:linear-gradient(to bottom,var(--accent1),transparent);opacity:.3;}
+  .rm-dot{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:2px;}
+  .rm-dot.next-dot{background:rgba(124,58,237,.2);border:1.5px solid var(--accent1);}
+  .rm-dot.future-dot{background:var(--border);}
+  .rm-body{flex:1;padding:2px 0 20px;}
+  .rm-year{font-family:'Unbounded',sans-serif;font-size:10px;color:var(--accent2);margin-bottom:3px;}
+  .rm-title{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;color:#fff;margin-bottom:3px;}
+  .rm-desc{font-size:10px;color:var(--muted);line-height:1.5;}
+
+  /* ── MODAL ── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+  .modal-overlay.show{opacity:1;pointer-events:all;}
+  .modal{background:#16161f;border:1px solid var(--border);border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:430px;transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .modal-overlay.show .modal{transform:translateY(0);}
+  .modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
+  .modal-title{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
+  .modal-date{font-size:11px;color:var(--muted);margin-bottom:20px;}
+  .modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+  .modal-btn{padding:14px;border-radius:14px;border:1.5px solid var(--border);background:var(--card);color:var(--text);font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s;text-align:center;}
+  .modal-btn:hover{border-color:var(--accent1);}
+  .modal-btn.selected-work{background:rgba(239,68,68,.2);border-color:var(--red);color:#fca5a5;}
+  .modal-btn.selected-free{background:rgba(34,197,94,.2);border-color:var(--green);color:#86efac;}
+  .modal-done-btn{width:100%;padding:14px;border-radius:14px;background:var(--accent1);border:none;color:white;font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .2s;margin-bottom:8px;}
+  .modal-done-btn:hover{opacity:.85;}
+  .modal-clear{width:100%;padding:10px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;transition:border-color .2s;}
+  .modal-clear:hover{border-color:var(--red);color:var(--red);}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--accent1);color:white;padding:10px 22px;border-radius:100px;font-size:11px;font-family:'Unbounded',sans-serif;font-weight:700;z-index:999;transition:transform .4s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+  .live-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;margin-right:4px;animation:pulse 2s infinite;}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+  .popping{animation:pop .3s ease;}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">🎉</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalTitle">—</div>
+    <div class="modal-date" id="modalDate">Күн түрін таңдаңыз</div>
+    <div class="modal-btns">
+      <button class="modal-btn" id="btnWork" onclick="setDayType('work')">🔴 Жұмыс<br><span style="font-size:9px;opacity:.6">24 сағат жұмыс</span></button>
+      <button class="modal-btn" id="btnFree" onclick="setDayType('free')">🟢 Демалыс<br><span style="font-size:9px;opacity:.6">Оқу + Figma</span></button>
+    </div>
+    <button class="modal-done-btn" onclick="markDone()">✅ Орындалды деп белгілеу</button>
+    <button class="modal-clear" onclick="clearDay()">Белгіні өшіру</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-label"><span class="live-dot"></span>Белсенді жоспар</div>
+    <h1>МЕНІҢ<br>ЖОСПАРЫМ</h1>
+    <div class="header-date" id="headerDate">—</div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-item"><span class="stat-num" id="statDone">0</span><div class="stat-label">бүгін ✅</div></div>
+    <div class="stat-item"><span class="stat-num" id="statStreak" style="color:var(--accent3)">0</span><div class="stat-label">стрик 🔥</div></div>
+    <div class="stat-item"><span class="stat-num" id="statTotalDone" style="color:var(--accent1)">0</span><div class="stat-label">барлығы ✓</div></div>
+    <div class="stat-item"><span class="stat-num" id="statWork" style="color:#fca5a5">0</span><div class="stat-label">жұмыс 🔴</div></div>
+  </div>
+
+  <!-- MOTIVATION CAROUSEL -->
+  <div class="moto-section">
+    <div class="section-title">Мотивация</div>
+    <div class="moto-carousel">
+      <div class="moto-slides" id="motoSlides">
+
+        <!-- Slide 0: Real uploaded image -->
+        <div class="moto-slide" onclick="nextSlide()">
+          <div class="slide-img-wrap">
+            <img src="moto1.png" alt="Бүгін жасамасаң ертең қиын болады" style="max-height:320px;">
+            <div class="slide-img-overlay"></div>
+          </div>
+          <div class="moto-body">
+            <span class="moto-emoji">🔥</span>
+            <div class="moto-text">Бүгін жасамасаң — ертең қиын болады</div>
+            <div class="moto-author">— Таңдау сенде: бүгін ме, әлде ертең бе?</div>
+          </div>
+        </div>
+
+        <!-- Slide 1: SVG poster — Ақша мен еркіндік -->
+        <div class="moto-slide" onclick="nextSlide()">
+          <div class="slide-svg-wrap">
+            <svg viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#0d0d14"/>
+                  <stop offset="100%" style="stop-color:#1a0a2e"/>
+                </linearGradient>
+                <linearGradient id="gc" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#f59e0b"/>
+                  <stop offset="100%" style="stop-color:#fbbf24"/>
+                </linearGradient>
+                <filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <rect width="400" height="280" fill="url(#g1)"/>
+              <!-- glow circles -->
+              <circle cx="80" cy="60" r="80" fill="#f59e0b" opacity=".06"/>
+              <circle cx="330" cy="220" r="100" fill="#7c3aed" opacity=".08"/>
+              <!-- coin stack left -->
+              <ellipse cx="70" cy="200" rx="28" ry="8" fill="#f59e0b" opacity=".3"/>
+              <rect x="42" y="170" width="56" height="30" rx="4" fill="#f59e0b" opacity=".2"/>
+              <ellipse cx="70" cy="170" rx="28" ry="8" fill="#f59e0b" opacity=".4"/>
+              <ellipse cx="70" cy="155" rx="24" ry="7" fill="#f59e0b" opacity=".35"/>
+              <ellipse cx="70" cy="142" rx="20" ry="6" fill="#fbbf24" opacity=".5" filter="url(#glow)"/>
+              <text x="70" y="147" text-anchor="middle" font-size="8" fill="#0d0d14" font-weight="bold" font-family="Arial">$</text>
+              <!-- main text -->
+              <text x="200" y="70" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="13" fill="#64748b" letter-spacing="4">АҚША ДЕГЕНІМІЗ</text>
+              <text x="200" y="110" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="32" fill="url(#gc)" font-weight="900" filter="url(#glow)">ЕРКІНДІК</text>
+              <text x="200" y="140" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#94a3b8">Еркіндік — білім арқылы келеді</text>
+              <!-- divider -->
+              <line x1="120" y1="158" x2="280" y2="158" stroke="#f59e0b" stroke-width="1" opacity=".3"/>
+              <!-- 3 pillars -->
+              <g transform="translate(110,175)">
+                <rect width="50" height="24" rx="12" fill="rgba(245,158,11,.15)" stroke="#f59e0b" stroke-width=".8" opacity=".8"/>
+                <text x="25" y="16" text-anchor="middle" font-size="9" fill="#f59e0b" font-family="Arial" font-weight="bold">АҒЫЛШЫН</text>
+              </g>
+              <g transform="translate(175,175)">
+                <rect width="50" height="24" rx="12" fill="rgba(124,58,237,.15)" stroke="#7c3aed" stroke-width=".8" opacity=".8"/>
+                <text x="25" y="16" text-anchor="middle" font-size="9" fill="#a855f7" font-family="Arial" font-weight="bold">FIGMA</text>
+              </g>
+              <g transform="translate(240,175)">
+                <rect width="50" height="24" rx="12" fill="rgba(34,197,94,.15)" stroke="#22c55e" stroke-width=".8" opacity=".8"/>
+                <text x="25" y="16" text-anchor="middle" font-size="9" fill="#22c55e" font-family="Arial" font-weight="bold">УАҚЫТ</text>
+              </g>
+              <!-- bottom -->
+              <text x="200" y="250" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="11" fill="#475569">→ ТАП &amp; ОСЫНЫ ОҚЫ</text>
+            </svg>
+          </div>
+          <div class="moto-body">
+            <span class="moto-emoji">💰</span>
+            <div class="moto-text">Ақша — еркіндік. Еркіндік — білім арқылы келеді.</div>
+            <div class="moto-author">— Белгісіз</div>
+          </div>
+        </div>
+
+        <!-- Slide 2: SVG — Бүгін vs Ертең (ұқсас uploaded-ке) -->
+        <div class="moto-slide" onclick="nextSlide()">
+          <div class="slide-svg-wrap">
+            <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="gl" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#1a0e00"/>
+                  <stop offset="50%" style="stop-color:#0d0d14"/>
+                  <stop offset="100%" style="stop-color:#0a0a1a"/>
+                </linearGradient>
+              </defs>
+              <rect width="400" height="260" fill="url(#gl)"/>
+              <!-- Left warm glow -->
+              <circle cx="100" cy="130" r="120" fill="#f59e0b" opacity=".07"/>
+              <!-- Right cold -->
+              <circle cx="300" cy="130" r="120" fill="#1e3a5f" opacity=".15"/>
+              <!-- divider -->
+              <line x1="200" y1="10" x2="200" y2="250" stroke="#1e1e2e" stroke-width="1.5"/>
+              <!-- LEFT SIDE — action -->
+              <circle cx="100" cy="80" r="25" fill="rgba(245,158,11,.15)" stroke="#f59e0b" stroke-width="1.5"/>
+              <text x="100" y="86" text-anchor="middle" font-size="18">⚡</text>
+              <text x="100" y="125" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="14" fill="#fff" font-weight="900">БҮГІН</text>
+              <text x="100" y="141" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#f59e0b" font-weight="bold">ҚИЫН</text>
+              <text x="100" y="163" text-anchor="middle" font-size="9" fill="#86efac">✓ Еңбек</text>
+              <text x="100" y="178" text-anchor="middle" font-size="9" fill="#86efac">✓ Дисциплина</text>
+              <text x="100" y="193" text-anchor="middle" font-size="9" fill="#86efac">✓ Өсу</text>
+              <!-- RIGHT SIDE — regret -->
+              <circle cx="300" cy="80" r="25" fill="rgba(100,116,139,.1)" stroke="#475569" stroke-width="1.5"/>
+              <text x="300" y="86" text-anchor="middle" font-size="18">😔</text>
+              <text x="300" y="125" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="14" fill="#64748b" font-weight="900">ЕРТЕҢ</text>
+              <text x="300" y="141" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#ef4444" font-weight="bold">ҚИЫН БОЛАДЫ</text>
+              <text x="300" y="163" text-anchor="middle" font-size="9" fill="#fca5a5">✕ Өкініш</text>
+              <text x="300" y="178" text-anchor="middle" font-size="9" fill="#fca5a5">✕ Стресс</text>
+              <text x="300" y="193" text-anchor="middle" font-size="9" fill="#fca5a5">✕ Мүмкіндік жоқ</text>
+              <!-- bottom -->
+              <text x="200" y="230" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="11" fill="#94a3b8">ТАҢДАУ СЕНДЕ</text>
+              <text x="200" y="248" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="9" fill="#f59e0b">БҮГІН БАСТА →</text>
+            </svg>
+          </div>
+          <div class="moto-body">
+            <span class="moto-emoji">⚡</span>
+            <div class="moto-text">Таңдау сенде: бүгін ме, әлде ертең бе?</div>
+            <div class="moto-author">— Бүгін баста!</div>
+          </div>
+        </div>
+
+        <!-- Slide 3: SVG — Жол картасы визуал -->
+        <div class="moto-slide" onclick="nextSlide()">
+          <div class="slide-svg-wrap">
+            <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#0d0d1a"/>
+                  <stop offset="100%" style="stop-color:#0a1a0a"/>
+                </linearGradient>
+                <filter id="glow2"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <rect width="400" height="260" fill="url(#g3)"/>
+              <circle cx="200" cy="130" r="160" fill="#22c55e" opacity=".03"/>
+              <!-- road path -->
+              <path d="M 40 220 Q 100 140 200 110 Q 300 80 370 40" stroke="#22c55e" stroke-width="2" fill="none" stroke-dasharray="8,4" opacity=".4"/>
+              <!-- milestones -->
+              <!-- 1 -->
+              <circle cx="60" cy="210" r="16" fill="rgba(34,197,94,.2)" stroke="#22c55e" stroke-width="1.5" filter="url(#glow2)"/>
+              <text x="60" y="216" text-anchor="middle" font-size="14">🌱</text>
+              <text x="60" y="238" text-anchor="middle" font-size="8" fill="#86efac">ҚАЗІР</text>
+              <!-- 2 -->
+              <circle cx="155" cy="155" r="16" fill="rgba(6,182,212,.15)" stroke="#06b6d4" stroke-width="1.5"/>
+              <text x="155" y="161" text-anchor="middle" font-size="14">💸</text>
+              <text x="155" y="179" text-anchor="middle" font-size="8" fill="#67e8f9">1-2 ЖЫЛ</text>
+              <!-- 3 -->
+              <circle cx="255" cy="105" r="16" fill="rgba(124,58,237,.15)" stroke="#7c3aed" stroke-width="1.5"/>
+              <text x="255" y="111" text-anchor="middle" font-size="14">📜</text>
+              <text x="255" y="129" text-anchor="middle" font-size="8" fill="#c4b5fd">2-3 ЖЫЛ</text>
+              <!-- 4 star -->
+              <circle cx="355" cy="55" r="20" fill="rgba(245,158,11,.2)" stroke="#f59e0b" stroke-width="2" filter="url(#glow2)"/>
+              <text x="355" y="62" text-anchor="middle" font-size="16">🌟</text>
+              <text x="355" y="84" text-anchor="middle" font-size="8" fill="#fbbf24">МАҚСАТ</text>
+              <!-- label -->
+              <text x="200" y="30" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="14" fill="#fff" font-weight="900">СЕНІҢ ЖОЛЫҢ</text>
+              <text x="200" y="48" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#64748b">Қадам сайын мақсатқа жақындайсың</text>
+            </svg>
+          </div>
+          <div class="moto-body">
+            <span class="moto-emoji">🚀</span>
+            <div class="moto-text">Мақсатың бар ма — жол табылады.</div>
+            <div class="moto-author">— Қазақ мақалы</div>
+          </div>
+        </div>
+
+        <!-- Slide 4: SVG — Дисциплина vs Өкініш -->
+        <div class="moto-slide" onclick="nextSlide()">
+          <div class="slide-svg-wrap">
+            <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#1a0a2e"/>
+                  <stop offset="100%" style="stop-color:#0a0a0f"/>
+                </linearGradient>
+              </defs>
+              <rect width="400" height="260" fill="url(#g4)"/>
+              <circle cx="200" cy="130" r="150" fill="#7c3aed" opacity=".04"/>
+              <!-- title -->
+              <text x="200" y="35" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="16" fill="#fff" font-weight="900">ДИСЦИПЛИНА</text>
+              <text x="200" y="55" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="11" fill="#7c3aed">= ЕРКІНДІК</text>
+              <!-- big quote -->
+              <text x="30" y="95" font-size="60" fill="#7c3aed" opacity=".15" font-family="Georgia,serif">"</text>
+              <text x="200" y="105" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#e2e8f0" font-style="italic">Өзіңді тоқтата алсаң —</text>
+              <text x="200" y="122" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#e2e8f0" font-style="italic">кез келген нәрсеге жете аласың.</text>
+              <!-- 3 stats -->
+              <g transform="translate(30,148)">
+                <rect width="100" height="52" rx="10" fill="rgba(124,58,237,.1)" stroke="rgba(124,58,237,.3)" stroke-width="1"/>
+                <text x="50" y="22" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="18" fill="#a855f7" font-weight="900">3-4</text>
+                <text x="50" y="37" text-anchor="middle" font-size="8" fill="#94a3b8">жыл жоспар</text>
+                <text x="50" y="49" text-anchor="middle" font-size="8" fill="#64748b">дисциплина</text>
+              </g>
+              <g transform="translate(150,148)">
+                <rect width="100" height="52" rx="10" fill="rgba(6,182,212,.1)" stroke="rgba(6,182,212,.3)" stroke-width="1"/>
+                <text x="50" y="22" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="18" fill="#06b6d4" font-weight="900">∞</text>
+                <text x="50" y="37" text-anchor="middle" font-size="8" fill="#94a3b8">мүмкіндік</text>
+                <text x="50" y="49" text-anchor="middle" font-size="8" fill="#64748b">білімді адамға</text>
+              </g>
+              <g transform="translate(270,148)">
+                <rect width="100" height="52" rx="10" fill="rgba(245,158,11,.1)" stroke="rgba(245,158,11,.3)" stroke-width="1"/>
+                <text x="50" y="22" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="18" fill="#f59e0b" font-weight="900">💰</text>
+                <text x="50" y="37" text-anchor="middle" font-size="8" fill="#94a3b8">табыс</text>
+                <text x="50" y="49" text-anchor="middle" font-size="8" fill="#64748b">нәтижесінде</text>
+              </g>
+              <text x="200" y="248" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="9" fill="#475569">— БҮГІННЕН БАСТА</text>
+            </svg>
+          </div>
+          <div class="moto-body">
+            <span class="moto-emoji">💎</span>
+            <div class="moto-text">Дисциплина — еркіндікке апаратын жол.</div>
+            <div class="moto-author">— Jocko Willink</div>
+          </div>
+        </div>
+
+        <!-- Slide 5: SVG — 1% rule -->
+        <div class="moto-slide" onclick="nextSlide()">
+          <div class="slide-svg-wrap">
+            <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#0a0a0f"/>
+                  <stop offset="100%" style="stop-color:#0f1a0a"/>
+                </linearGradient>
+                <filter id="glow3"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <rect width="400" height="260" fill="url(#g5)"/>
+              <!-- grid lines -->
+              <line x1="40" y1="200" x2="370" y2="200" stroke="#1e1e2e" stroke-width="1"/>
+              <line x1="40" y1="200" x2="40" y2="30" stroke="#1e1e2e" stroke-width="1"/>
+              <!-- growth curve -->
+              <path d="M 40 195 Q 100 190 150 180 Q 200 165 230 145 Q 270 110 310 70 Q 340 45 370 30" stroke="#22c55e" stroke-width="2.5" fill="none" filter="url(#glow3)"/>
+              <!-- flat line -->
+              <path d="M 40 195 Q 200 194 370 193" stroke="#ef4444" stroke-width="1.5" fill="none" stroke-dasharray="6,3" opacity=".6"/>
+              <!-- labels -->
+              <text x="380" y="35" font-size="9" fill="#22c55e">+37x</text>
+              <text x="380" y="196" font-size="9" fill="#ef4444">0%</text>
+              <!-- x axis labels -->
+              <text x="40" y="215" text-anchor="middle" font-size="8" fill="#64748b">Бүгін</text>
+              <text x="150" y="215" text-anchor="middle" font-size="8" fill="#64748b">3 ай</text>
+              <text x="255" y="215" text-anchor="middle" font-size="8" fill="#64748b">6 ай</text>
+              <text x="370" y="215" text-anchor="middle" font-size="8" fill="#64748b">1 жыл</text>
+              <!-- title -->
+              <text x="200" y="38" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="26" fill="#22c55e" font-weight="900" filter="url(#glow3)">1%</text>
+              <text x="200" y="58" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="11" fill="#fff">КҮН САЙЫН ЖАҚСЫ БОЛ</text>
+              <text x="200" y="75" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#64748b">365 күннен кейін — 37 есе күшті боласың</text>
+              <!-- dot on curve end -->
+              <circle cx="370" cy="30" r="5" fill="#22c55e" filter="url(#glow3)"/>
+              <text x="200" y="240" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="9" fill="#475569">Небары 1% прогресс де прогресс — James Clear</text>
+            </svg>
+          </div>
+          <div class="moto-body">
+            <span class="moto-emoji">📈</span>
+            <div class="moto-text">Күн сайын 1% жақсы бол — 1 жылда 37 есе өсесің.</div>
+            <div class="moto-author">— James Clear, Atomic Habits</div>
+          </div>
+        </div>
+
+      </div><!-- /moto-slides -->
+      <div class="moto-nav">
+        <button class="moto-arr" onclick="prevSlide(event)">‹</button>
+        <div class="moto-dots" id="motoDots"></div>
+        <div class="moto-counter" id="motoCounter">1/6</div>
+        <button class="moto-arr" onclick="nextSlide(event)">›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="calendar-section">
+    <div class="section-title">Ай күнтізбесі</div>
+    <div class="cal-card">
+      <div class="cal-nav">
+        <button class="cal-arr" onclick="changeMonth(-1)">‹</button>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="cal-month" id="calMonthLabel"></div>
+          <button class="cal-today-btn" onclick="goToday()">Бүгін</button>
+        </div>
+        <button class="cal-arr" onclick="changeMonth(1)">›</button>
+      </div>
+      <div class="cal-legend">
+        <div class="leg-item"><div class="leg-dot leg-work"></div>Жұмыс</div>
+        <div class="leg-item"><div class="leg-dot leg-free"></div>Демалыс</div>
+        <div class="leg-item"><div class="leg-dot leg-done"></div>Орындалды</div>
+        <div class="leg-item"><div class="leg-dot leg-today"></div>Бүгін</div>
+      </div>
+      <div class="cal-dow">
+        <div class="cal-dow-label">Дс</div><div class="cal-dow-label">Сс</div><div class="cal-dow-label">Ср</div>
+        <div class="cal-dow-label">Бс</div><div class="cal-dow-label">Жм</div><div class="cal-dow-label">Сб</div><div class="cal-dow-label">Жк</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-info">Кез келген күнге басыңыз → <span>жұмыс/демалыс</span> белгілеңіз немесе <span>орындалды</span> деп қойыңыз</div>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="checklist-section">
+    <div class="checklist-header">
+      <div class="section-title" style="margin-bottom:0;flex:1;">Бүгінгі тапсырмалар</div>
+      <div class="day-badge badge-none" id="todayBadge">—</div>
+    </div>
+    <div style="margin-bottom:12px;"></div>
+    <div class="checklist-card">
+      <div class="check-item free-task" data-id="f1" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Duolingo — 15 минут</div><span class="check-cat cat-en">Ағылшын</span></div>
+      <div class="check-item free-task" data-id="f2" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Ағылшын YouTube — 1 видео</div><span class="check-cat cat-en">Ағылшын</span></div>
+      <div class="check-item free-task" data-id="f3" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Figma сабақ — 1 сағат</div><span class="check-cat cat-fig">Figma</span></div>
+      <div class="check-item free-task" data-id="f4" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Figma — жаңа элемент жаса</div><span class="check-cat cat-fig">Figma</span></div>
+      <div class="check-item free-task" data-id="f5" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">10 жаңа ағылшын сөз</div><span class="check-cat cat-en">Ағылшын</span></div>
+      <div class="check-item free-task" data-id="f6" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Мотивация видео — YouTube</div><span class="check-cat cat-any">Рух</span></div>
+      <div class="check-item work-task hidden" data-id="w1" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Duolingo — 5 мин (үзілісте)</div><span class="check-cat cat-any">Минимум</span></div>
+      <div class="check-item work-task hidden" data-id="w2" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">3 жаңа ағылшын сөз</div><span class="check-cat cat-en">Ағылшын</span></div>
+      <div class="check-item work-task hidden" data-id="w3" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Мотивация подкаст / видео</div><span class="check-cat cat-any">Рух</span></div>
+      <div class="no-type-msg no-tasks" style="display:none;">Күнтізбеден бүгінгі күнді белгілеңіз ↑</div>
+    </div>
+  </div>
+
+  <!-- IDEAS -->
+  <div class="ideas-section">
+    <div class="section-title">Керемет идеялар</div>
+    <div class="ideas-grid">
+      <div class="idea-card c1"><span class="idea-icon">📺</span><div class="idea-title">Subtitles ағылшын</div><div class="idea-desc">Friends, Suits — ағылшын субтитрмен қара</div></div>
+      <div class="idea-card c2"><span class="idea-icon">💼</span><div class="idea-title">Kwork фриланс</div><div class="idea-desc">Figma дайын болса — алғашқы тапсырыс ал</div></div>
+      <div class="idea-card c3"><span class="idea-icon">📱</span><div class="idea-title">LinkedIn профиль</div><div class="idea-desc">Ағылшын профиль — рекрутерлер өздері табады</div></div>
+      <div class="idea-card c4"><span class="idea-icon">🤝</span><div class="idea-title">QazDevs / QazUI</div><div class="idea-desc">Telegram: жергілікті IT қауымдастық</div></div>
+      <div class="idea-card c1"><span class="idea-icon">🏦</span><div class="idea-title">Жинақ шот</div><div class="idea-desc">Айына 10к+ жина — IELTS + виза дайын</div></div>
+      <div class="idea-card c2"><span class="idea-icon">🎧</span><div class="idea-title">Ағылшын подкаст</div><div class="idea-desc">Жолда тыңда — 6 ай ішінде сезіледі</div></div>
+      <div class="idea-card c3"><span class="idea-icon">📓</span><div class="idea-title">Күнделік жаз</div><div class="idea-desc">Ағылшынша 3 сөйлем — грамматика өседі</div></div>
+      <div class="idea-card c4"><span class="idea-icon">🎨</span><div class="idea-title">Dribbble / Behance</div><div class="idea-desc">Figma жобаларыңды жариялай бастай</div></div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-section">
+    <div class="section-title">Прогресс</div>
+    <div class="progress-card">
+      <div class="progress-row"><div class="progress-label">Ағылшын</div><div class="progress-bar"><div class="progress-fill fill-en" data-target="5"></div></div><div class="progress-pct">5%</div></div>
+      <div class="progress-row"><div class="progress-label">Figma</div><div class="progress-bar"><div class="progress-fill fill-fig" data-target="2"></div></div><div class="progress-pct">2%</div></div>
+      <div class="progress-row"><div class="progress-label">IELTS</div><div class="progress-bar"><div class="progress-fill fill-ielts" data-target="1"></div></div><div class="progress-pct">1%</div></div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="roadmap-section">
+    <div class="section-title">Жол картасы</div>
+    <div class="roadmap">
+      <div class="rm-item"><div class="rm-dot next-dot">🌱</div><div class="rm-body"><div class="rm-year">ҚАЗІР — 1 жыл</div><div class="rm-title">Негіз қалау</div><div class="rm-desc">Duolingo + YouTube күн сайын. Figma негіздері. Алғашқы жоба жасау.</div></div></div>
+      <div class="rm-item"><div class="rm-dot future-dot">💸</div><div class="rm-body"><div class="rm-year">1–2 жыл</div><div class="rm-title">Алғашқы ақша</div><div class="rm-desc">Визаға қол созу.</div></div></div>
+      <div class="rm-item"><div class="rm-dot future-dot">📜</div><div class="rm-body"><div class="rm-year">2–3 жыл</div><div class="rm-title">IELTS + Тәжірибе</div><div class="rm-desc">IELTS 6.0+ алу. Тұрақты жұмыс табыс.</div></div></div>
+      <div class="rm-item"><div class="rm-dot future-dot">🌟</div><div class="rm-body"><div class="rm-year">3–4 жыл</div><div class="rm-title">Еркіндік + Табыс</div><div class="rm-desc">Арман - Нәтиже - Жетістік💰</div></div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const STORAGE_KEY='myplan_v5';
+const KK_MONTHS=['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'];
+const KK_DOW=['Жексенбі','Дүйсенбі','Сейсенбі','Сәрсенбі','Бейсенбі','Жұма','Сенбі'];
+
+let state={days:{},tasks:{},slide:0};
+let curMonth,curYear,modalKey=null;
+const TOTAL_SLIDES=6;
+
+function load(){try{const s=localStorage.getItem(STORAGE_KEY);if(s)state={...state,...JSON.parse(s)};}catch(e){}}
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}
+function dateKey(y,m,d){return`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
+function todayKey(){const n=new Date();return dateKey(n.getFullYear(),n.getMonth(),n.getDate());}
+
+// CAROUSEL
+function buildDots(){
+  const c=document.getElementById('motoDots');c.innerHTML='';
+  for(let i=0;i<TOTAL_SLIDES;i++){const d=document.createElement('div');d.className='qdot'+(i===state.slide?' active':'');d.onclick=(e)=>{e.stopPropagation();goSlide(i);};c.appendChild(d);}
+}
+function goSlide(i){
+  state.slide=i;
+  document.getElementById('motoSlides').style.transform=`translateX(-${i*100}%)`;
+  document.getElementById('motoCounter').textContent=`${i+1}/${TOTAL_SLIDES}`;
+  buildDots();save();
+}
+function nextSlide(e){if(e)e.stopPropagation();goSlide((state.slide+1)%TOTAL_SLIDES);}
+function prevSlide(e){if(e)e.stopPropagation();goSlide((state.slide-1+TOTAL_SLIDES)%TOTAL_SLIDES);}
+
+// Touch swipe
+let tX=0;
+document.addEventListener('DOMContentLoaded',()=>{
+  const el=document.getElementById('motoSlides');
+  el.addEventListener('touchstart',e=>tX=e.touches[0].clientX,{passive:true});
+  el.addEventListener('touchend',e=>{const dx=tX-e.changedTouches[0].clientX;if(Math.abs(dx)>40){dx>0?nextSlide():prevSlide();}},{passive:true});
+});
+
+// CALENDAR
+function syncToToday(){const now=new Date();curMonth=now.getMonth();curYear=now.getFullYear();const dow=KK_DOW[now.getDay()];document.getElementById('headerDate').textContent=`${dow}, ${now.getDate()} ${KK_MONTHS[now.getMonth()]} ${now.getFullYear()}`;}
+function goToday(){syncToToday();buildCal();}
+function buildCal(){
+  const grid=document.getElementById('calGrid');grid.innerHTML='';
+  document.getElementById('calMonthLabel').textContent=`${KK_MONTHS[curMonth]} ${curYear}`;
+  const first=new Date(curYear,curMonth,1);let sd=first.getDay();sd=sd===0?6:sd-1;
+  const dim=new Date(curYear,curMonth+1,0).getDate();const today=new Date();
+  for(let i=0;i<sd;i++){const e=document.createElement('div');e.className='cal-day empty';grid.appendChild(e);}
+  for(let d=1;d<=dim;d++){
+    const key=dateKey(curYear,curMonth,d);const info=state.days[key]||{};
+    const isToday=today.getFullYear()===curYear&&today.getMonth()===curMonth&&today.getDate()===d;
+    const el=document.createElement('div');
+    let cls='cal-day';if(info.type==='work')cls+=' work';else if(info.type==='free')cls+=' free';
+    if(info.done)cls+=' done';if(isToday)cls+=' today';
+    el.className=cls;el.innerHTML=`<div class="day-num">${d}</div>`;el.onclick=()=>openModal(d,key);grid.appendChild(el);
+  }
+}
+function changeMonth(dir){curMonth+=dir;if(curMonth>11){curMonth=0;curYear++;}if(curMonth<0){curMonth=11;curYear--;}buildCal();}
+function scheduleAutoRefresh(){const now=new Date();const ms=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,0,5)-now;setTimeout(()=>{syncToToday();buildCal();updateTodayBadge();restoreChecks();updateStats();scheduleAutoRefresh();},ms);}
+
+// MODAL
+function openModal(day,key){
+  modalKey=key;const info=state.days[key]||{};const date=new Date(curYear,curMonth,day);
+  document.getElementById('modalTitle').textContent=`${day} ${KK_MONTHS[curMonth]} ${curYear}`;
+  document.getElementById('modalDate').textContent=KK_DOW[date.getDay()];
+  document.getElementById('btnWork').className='modal-btn'+(info.type==='work'?' selected-work':'');
+  document.getElementById('btnFree').className='modal-btn'+(info.type==='free'?' selected-free':'');
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show');}
+function closeModalOutside(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+function setDayType(t){if(!state.days[modalKey])state.days[modalKey]={};state.days[modalKey].type=t;save();buildCal();updateTodayBadge();updateStats();document.getElementById('btnWork').className='modal-btn'+(t==='work'?' selected-work':'');document.getElementById('btnFree').className='modal-btn'+(t==='free'?' selected-free':'');showToast(t==='work'?'🔴 Жұмыс күні':'🟢 Демалыс күні');}
+function markDone(){if(!state.days[modalKey])state.days[modalKey]={};state.days[modalKey].done=!state.days[modalKey].done;save();buildCal();updateStats();closeModal();showToast(state.days[modalKey].done?'✅ Орындалды!':'↩️ Белгі алынды');}
+function clearDay(){delete state.days[modalKey];save();buildCal();updateTodayBadge();updateStats();closeModal();}
+
+// CHECKLIST
+function updateTodayBadge(){
+  const info=state.days[todayKey()]||{};const badge=document.getElementById('todayBadge');
+  const ft=document.querySelectorAll('.free-task');const wt=document.querySelectorAll('.work-task');const nm=document.querySelector('.no-type-msg');
+  if(info.type==='free'){badge.textContent='🟢 Демалыс';badge.className='day-badge badge-free';ft.forEach(t=>t.classList.remove('hidden'));wt.forEach(t=>t.classList.add('hidden'));nm.style.display='none';}
+  else if(info.type==='work'){badge.textContent='🔴 Жұмыс';badge.className='day-badge badge-work';ft.forEach(t=>t.classList.add('hidden'));wt.forEach(t=>t.classList.remove('hidden'));nm.style.display='none';}
+  else{badge.textContent='— белгісіз';badge.className='day-badge badge-none';ft.forEach(t=>t.classList.add('hidden'));wt.forEach(t=>t.classList.add('hidden'));nm.style.display='block';}
+}
+function toggleCheck(el){
+  const id=el.dataset.id;const tk=todayKey();if(!state.tasks[tk])state.tasks[tk]={};
+  if(state.tasks[tk][id]){delete state.tasks[tk][id];el.classList.remove('done');}
+  else{state.tasks[tk][id]=true;el.classList.add('done');el.classList.add('popping');setTimeout(()=>el.classList.remove('popping'),300);showToast();}
+  save();updateStats();
+}
+function restoreChecks(){const done=state.tasks[todayKey()]||{};document.querySelectorAll('.check-item').forEach(el=>{if(done[el.dataset.id])el.classList.add('done');else el.classList.remove('done');});}
+function updateStats(){
+  document.getElementById('statDone').textContent=Object.keys(state.tasks[todayKey()]||{}).length;
+  document.getElementById('statStreak').textContent=calcStreak();
+  document.getElementById('statTotalDone').textContent=Object.values(state.days).filter(d=>d.done).length;
+  document.getElementById('statWork').textContent=Object.values(state.days).filter(d=>d.type==='work').length;
+}
+function calcStreak(){let s=0;const today=new Date();for(let i=0;i<90;i++){const d=new Date(today);d.setDate(d.getDate()-i);const key=dateKey(d.getFullYear(),d.getMonth(),d.getDate());if(state.days[key]&&state.days[key].done)s++;else if(i>0)break;}return s;}
+function showToast(msg){const t=document.getElementById('toast');const msgs=['🎉 Тамаша!','💪 Жарайсың!','🔥 Керемет!','⚡ Алға!','✅ Бітті!'];t.textContent=msg||msgs[Math.floor(Math.random()*msgs.length)];t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+// INIT
+load();syncToToday();buildCal();updateTodayBadge();restoreChecks();
+goSlide(state.slide||0);
+updateStats();scheduleAutoRefresh();
+setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>b.style.width=b.dataset.target+'%');},700);
+</script>
+</body>
+</html>
